@@ -13,6 +13,7 @@ length(unique(Statedata$PWSID)) # 10,102
 # aggregate data, if one PWS historically detected, it is yes
 state_df <- data.frame()
 
+
 for (PWS in unique(Statedata$PWSID)) {
   PWS1 <- Statedata[Statedata$PWSID %in% PWS,]
   tryCatch({
@@ -49,6 +50,12 @@ intersect(U3_df$PWSID, state_df$PWSID) # 1171
 intersect(c(U3_df$PWSID, U5_df$PWSID), state_df$PWSID) # 1467
 
 intersect(MA$PWS.ID, state_df$PWSID)
+
+table(state_df$label) # 6613/3488
+
+EPAstate_detail <- merge(mydata_dum, state_df[,c(1,49)], by.x = "PWS ID", by.y="PWSID", all=F)
+write.table(EPAstate_detail, "../TrainData/EPAStateTrain.csv", sep = "\t",row.names = F, quote = F)
+
 
 # collected state data
 CO <- read.csv("States/CO PFAS2020SamplingProject_AllResults.csv")
@@ -225,7 +232,7 @@ table(WA_dcast$label) #1166/146
 WA_detail <- merge(mydata_dum, WA_dcast[,c(1,31)], by.x = "PWS ID", by.y="PWSID", all=F)
 write.table(WA_detail, "../TrainData/WAtrain.csv", sep = "\t",row.names = F, quote = F)
 
-length(intersect(state_df$PWSID, c(CO_detail$`PWS ID`,CA_detail$`PWS ID`,IN_detail$`PWS ID`,MA_detail$PWS.ID,
+length(intersect(EPAstate_detail$`PWS ID`, c(CO_detail$`PWS ID`,CA_detail$`PWS ID`,IN_detail$`PWS ID`,MA_detail$PWS.ID,
                             MD_details$`PWS ID`,MI_detail$`PWS ID`,NC_detail$`PWS ID`,OH_detail$`PWS ID`,OR$PWS,
                             PA_detail$`PWS ID`,RI_detail$`PWS ID`,SC_detail$`PWS ID`,UT_detail$`PWS ID`,WA_detail$`PWS ID`)))
           
