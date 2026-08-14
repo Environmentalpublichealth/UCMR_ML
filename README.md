@@ -6,4 +6,4 @@ plus geospatial, hydrogeologic, and administrative features.
 
 ## Contents
 
-- [`pfas/`](pfas/) — PFAS detection models (Logistic Regression, Random Forest, XGBoost): full feature-engineering pipeline, trained models, performance metrics, DML/SHAP statistical validation, and external state-monitoring-data validation. See [`pfas/README.md`](pfas/README.md) for details and reproduction steps.
+- [`pfas/`](pfas/) — PFAS detection models (Logistic Regression, Random Forest, XGBoost): full feature-engineering pipeline, trained models, performance metrics, SHAP feature importance, and external state-monitoring-data validation. See [`pfas/README.md`](pfas/README.md) for details and reproduction steps.

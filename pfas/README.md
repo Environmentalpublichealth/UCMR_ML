@@ -14,12 +14,12 @@ Three models are provided: **Logistic Regression** (interpretable baseline),
 pfas/
   code/
     feature_pipeline/   # build the national facility feature table from raw sources
-    modeling/            # backward elimination, final training, DML, model I/O
+    modeling/            # backward elimination, final training, model I/O
     plots/                # SHAP / ROC visualization scripts
   data/                  # finished, ready-to-train feature table + selected feature lists
   models/                 # trained model artifacts (joblib)
   results/
-    metrics/              # CV results, permutation/SHAP importance, DML results, PWS-level metrics
+    metrics/              # CV results, permutation/SHAP importance, PWS-level metrics
     plots/                 # ROC curves, confusion matrices, SHAP plots
   README.md              # this file
 ```
@@ -81,7 +81,6 @@ kept despite looking similar.
 | `backward_elim_pfas_li.py` | Backward feature elimination (RFE) with Spearman collinearity dedup, producing `data/backward_elim_national_pfas_{rf,xgb}_final_features.csv` |
 | `train_final_pfas_li.py` | Train the final RF/XGB models on the backward-elimination-selected features, 5-fold GroupKFold CV (grouped by PWSID) |
 | `save_lr_model.py` | Train and persist the LR baseline (VIF-prune → p-value-prune → LogisticRegression) — this pipeline previously only existed inline inside the ROC-plotting script; this script makes it a reusable, saved artifact |
-| `double_ml_pfas_li_final.py` | Double/Debiased ML (Chernozhukov et al. 2018) significance testing — cross-fitted nuisance models, FDR-BH corrected q-values, for each surviving feature |
 | `score_validation.py` | Load all three saved models and score an external validation feature table |
 
 **Cross-validation**: 5-fold `GroupKFold`/`StratifiedGroupKFold`, grouped by
@@ -107,21 +106,9 @@ positive if any facility is positive. n=9,745 PWS, 3,256 positive (33.4%).
 
 Full ROC curves (all three models together): `results/plots/roc_curve_facility.png`,
 `results/plots/roc_curve_pws.png`. Confusion matrices, permutation importance,
-and SHAP plots (both the full ranking and the DML-filtered explanatory subset)
-are in `results/plots/`.
+and SHAP importance plots are in `results/plots/`.
 
-## 5. Statistical validation: DML + SHAP
-
-Every candidate feature was tested with cross-fitted Double/Debiased ML
-(`double_ml_pfas_li_final.py`) — a feature is "DML-significant" if its
-association with `pfas_detected` survives adjustment for every other feature
-in the pool (FDR-BH corrected, q<0.05), not just raw correlation. The
-DML-filtered SHAP plots (`xgb_shap_*_dml_filtered.png`) show only features
-that are **both** top-10 by mean |SHAP value| **and** DML-significant — this
-filters out features the model leans on that are actually riding on
-collinearity with something else. Full DML results: `results/metrics/double_ml_pfas_final_results.csv`.
-
-## 6. External validation: state PFAS monitoring data
+## 5. External validation: state PFAS monitoring data
 
 The trained models were validated against real, independently-collected PFAS
 monitoring data from state drinking-water programs (not UCMR5, not used in
@@ -169,7 +156,7 @@ independent, cross-state, cross-lab validation set, though — as expected for
 true external validation — performance is lower than the in-sample
 cross-validated numbers above.
 
-## 7. Reproducing this from scratch
+## 6. Reproducing this from scratch
 
 **Note on paths**: these scripts were developed for a specific local/HPC
 environment and contain hardcoded absolute paths to raw data sources (marked
@@ -197,15 +184,11 @@ python3 train_final_pfas_li.py --arm national --target pfas --model rf
 python3 train_final_pfas_li.py --arm national --target pfas --model xgb
 python3 save_lr_model.py
 
-# 3. Statistical validation
-python3 double_ml_pfas_li_final.py --target pfas
-
-# 4. Plots
+# 3. Plots
 cd ../plots
-python3 plot_shap_dml_filtered.py --target pfas
 python3 plot_roc_curves.py --target pfas
 
-# 5. Score a new validation set (any state, any PWS list with the same
+# 4. Score a new validation set (any state, any PWS list with the same
 #    feature schema as national_pfas_features_ready.csv)
 cd ../modeling
 python3 score_validation.py --features /path/to/validation_features.csv \

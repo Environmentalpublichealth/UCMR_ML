@@ -84,7 +84,7 @@ DROP_ALWAYS = {
     'dist_discharge_km', 'dist_manufacturer_km',
     # battery_mfg distance dropped entirely (both full-segment and the
     # recycling+cell_mfg+battery_grade-restricted version) — restricting to
-    # plausible segments fixed the DML sign (closer=higher Li) for 90% of
+    # plausible segments fixed the sign (closer=higher Li) for 90% of
     # the range, but SHAP dependence still reversed sharply in the farthest
     # decile (>~200km), a shape inconsistent with any known groundwater
     # contaminant-transport mechanism (measured plume lengths rarely exceed
@@ -174,8 +174,8 @@ LAND_USE_PAIRS = [
 # Raw percentages induce spurious negative correlation among categories
 # purely from the sum constraint — Pearson's 1897 "spurious correlation,"
 # formalized by Aitchison's 1986 compositional data analysis (CoDA)
-# framework — which neither naive correlation checks nor DML's RF-based
-# nuisance models fully absorb. Centered log-ratio (CLR) transform fixes
+# framework — which naive correlation checks don't fully absorb.
+# Centered log-ratio (CLR) transform fixes
 # this: clr(x_i) = log(x_i / geometric_mean(x)). Applied in
 # load_prepared_features() below (used by both PFAS and Li — the
 # pre-prepared CSVs share the same 9 source_*_pct columns). Same
@@ -231,7 +231,7 @@ LOG_COLS = [
     # (Tokranov et al. 2024 Science approach: group sparse/clustered source
     # categories instead of modeling each separately). Present in <30 of 51
     # states individually, so raw per-category distance encoded region as
-    # much as proximity. DML-checked: both have the same (sensible) sign,
+    # much as proximity. Checked: both have the same (sensible) sign,
     # so pooling is safe here.
     'dist_pfas_clustered_km',
     # v8: airport distances (FAA Part 139 certified airports)
@@ -298,7 +298,7 @@ LI_EXTRA_DROP = [
     'source_li_10_30_pub', 'source_li_gt30_pub',
     # Airport distances — PFAS source (AFFF fire training), not a Li driver
     'log_dist_airport_km', 'log_count_airports_in_huc12',
-    # Fe/Al/As geochem: not individually DML-significant on midwest8
+    # Fe/Al/As geochem: not individually significant on midwest8
     # (redundant with ROCK_TYPE/precip/forest_pct, not spurious) and an
     # ablation test there showed ~0 AUC cost to removing them (RF -0.005,
     # XGB +0.002, LR unchanged) — dropped here too for a simpler,
