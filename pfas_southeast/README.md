@@ -42,8 +42,8 @@ from the properly-relabeled 27 PWS, not the larger but mislabeled set.
 
 - `code/feature_pipeline/15_ml_pipeline_national.py` — shared library (CV, VIF/p-value pruning, feature-engineering utilities). Identical to the copy in `../pfas/code/feature_pipeline/`.
 - `code/modeling/filter_region.py` — already run to produce `data/national_pfas_features_ready.csv`; re-run only if the upstream national dataset changes.
-- `code/modeling/backward_elim_pfas_li.py` — backward feature elimination; accepts `--arm southeast` (added alongside the existing `midwest8`/`national` options).
-- `code/modeling/train_final_pfas_li.py` — final RF/XGB training; also accepts `--arm southeast`. Uses the **national PFAS hyperparameters as a documented starting default** (no region-specific hyperparameter search has been run) — re-tune with a fresh randomized search if you want region-optimized values instead.
+- `code/modeling/backward_elim_pfas.py` — backward feature elimination for the Southeast arm (PFAS only — the shared `midwest8`/`national`/lithium code paths in the original script were removed here, along with the now-broken path they relied on, since this folder never had those source files to begin with).
+- `code/modeling/train_final_pfas.py` — final RF/XGB training. Uses the **national PFAS hyperparameters as a documented starting default** (no region-specific hyperparameter search has been run) — re-tune with a fresh randomized search if you want region-optimized values instead.
 - `code/modeling/save_lr_model.py` — trains and saves the LR baseline (VIF-prune → p-value-prune → LogisticRegression).
 - `code/modeling/score_validation.py` — loads the three saved models and scores an external validation feature table (unmodified from `../pfas/`, fully generic).
 
@@ -56,10 +56,10 @@ cd code/modeling
 python3 filter_region.py
 
 # 2. Feature selection + final training
-python3 backward_elim_pfas_li.py --arm southeast --target pfas --model rf
-python3 backward_elim_pfas_li.py --arm southeast --target pfas --model xgb
-python3 train_final_pfas_li.py --arm southeast --target pfas --model rf
-python3 train_final_pfas_li.py --arm southeast --target pfas --model xgb
+python3 backward_elim_pfas.py --model rf
+python3 backward_elim_pfas.py --model xgb
+python3 train_final_pfas.py --model rf
+python3 train_final_pfas.py --model xgb
 python3 save_lr_model.py
 
 # 3. Test against NC

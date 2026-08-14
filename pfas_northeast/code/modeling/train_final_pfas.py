@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-Train and save the FINAL PFAS/Lithium models using the feature sets
-backward elimination selected (backward_elim_pfas_li.py), instead of RFE's
-block-truncated selection. No hyperparameter search, no RFE — just fit the
-model that was already validated during backward elimination and produce
-the same style of outputs (5-fold CV metrics, facility + PWS confusion
-matrices, PWS-level metrics, saved model) as the main pipelines
-(ml_pipeline.py / national/15_ml_pipeline_national.py) produce for their
-RFE-selected models, so results are directly comparable.
+Train and save the FINAL PFAS models for the northeast regional arm, using
+the feature set backward elimination selected (backward_elim_pfas.py).
+No hyperparameter search, no RFE -- just fit the model that was already
+validated during backward elimination and produce the same style of
+outputs (5-fold CV metrics, facility + PWS confusion matrices, PWS-level
+metrics, saved model) as the national pipeline produces, so results are
+directly comparable.
 
-Requires backward_elim_{arm}_{target}_{model}_final_features.csv to exist
-(produced by backward_elim_pfas_li.py --arm ... --target ... --model ...),
-same directory.
+Requires backward_elim_{arm}_pfas_{model}_final_features.csv to exist
+(produced by backward_elim_pfas.py --arm northeast --model ...), same
+directory.
 
-Usage (one of the 8 combinations):
-  python3 train_final_pfas_li.py --arm midwest8 --target pfas --model rf
+Usage:
+  python3 train_final_pfas.py --arm northeast --model rf
+  python3 train_final_pfas.py --arm northeast --model xgb
 """
 import argparse
 import importlib.util
@@ -32,47 +32,15 @@ from sklearn.model_selection import StratifiedGroupKFold
 import xgboost as xgb
 
 HERE = Path(__file__).resolve().parent
-RECALL_TARGET = {'pfas': 0.60, 'li': 0.80}
+RECALL_TARGET = {'pfas': 0.60}
 
-# Same fixed hyperparameters used in backward_elim_pfas_li.py, kept in sync
+# Same fixed hyperparameters used in backward_elim_pfas.py, kept in sync
 # deliberately — the final model should be exactly what backward
 # elimination validated, not a re-tuned variant.
 HYPERPARAMS = {
-    ('midwest8', 'li', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=152, random_state=42, n_jobs=-1),
-    ('midwest8', 'li', 'xgb'): dict(
-        colsample_bytree=0.9, gamma=0.1, learning_rate=0.05, max_depth=5,
-        min_child_weight=9, n_estimators=285, reg_alpha=0.1, reg_lambda=1.0,
-        scale_pos_weight=2.6482364156339373, subsample=0.7,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('midwest8', 'pfas', 'rf'): dict(
-        class_weight='balanced', max_depth=15, max_features=0.3,
-        min_samples_leaf=6, n_estimators=357, random_state=42, n_jobs=-1),
-    ('midwest8', 'pfas', 'xgb'): dict(
-        colsample_bytree=0.9, gamma=0.1, learning_rate=0.05, max_depth=5,
-        min_child_weight=9, n_estimators=285, reg_alpha=0.1, reg_lambda=1.0,
-        scale_pos_weight=3.661388550548112, subsample=0.7,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('national', 'li', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
-    ('national', 'li', 'xgb'): dict(
-        colsample_bytree=0.6, gamma=0, learning_rate=0.05, max_depth=7,
-        min_child_weight=3, n_estimators=287, reg_alpha=0, reg_lambda=2.0,
-        scale_pos_weight=1.912605435801312, subsample=0.6,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('national', 'pfas', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
-    ('national', 'pfas', 'xgb'): dict(
-        colsample_bytree=0.6, gamma=0, learning_rate=0.05, max_depth=7,
-        min_child_weight=3, n_estimators=287, reg_alpha=0, reg_lambda=2.0,
-        scale_pos_weight=3.2566477955052324, subsample=0.6,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    # Northeast regional arm: reuses the national PFAS hyperparameters as a
-    # documented starting default (no region-specific search has been run yet) --
-    # re-tune via a fresh randomized search if you want region-optimized values.
+    # Starting hyperparameters, inherited from the national PFAS model's own
+    # randomized search -- no region-specific search has been run yet. Re-tune
+    # with a fresh randomized search if you want region-optimized values.
     ('northeast', 'pfas', 'rf'): dict(
         class_weight='balanced', max_depth=None, max_features=0.3,
         min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
@@ -84,36 +52,21 @@ HYPERPARAMS = {
 }
 
 
-def load_midwest8(target, logger):
-    spec = importlib.util.spec_from_file_location("base_ml", str(HERE / 'ml_pipeline.py'))
+def load_data(logger):
+    spec = importlib.util.spec_from_file_location(
+        "base_ml", str(HERE.parent / 'feature_pipeline' / '15_ml_pipeline_national.py'))
     base_ml = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(base_ml)
 
-    X_raw, X_imp, y_pfas, y_li, groups, col_medians = base_ml.build_features(base_ml.DATA_PATH, logger)
-    y_all = y_pfas if target == 'pfas' else y_li
-    extra_drop = base_ml.PFAS_EXTRA_DROP if target == 'pfas' else base_ml.LI_EXTRA_DROP
-    drop = [c for c in extra_drop if c in X_raw.columns]
-    if drop:
-        X_raw = X_raw.drop(columns=drop)
-        X_imp = X_imp.drop(columns=drop)
-    return base_ml, X_raw, X_imp, y_all, groups
-
-
-def load_national(target, logger):
-    spec = importlib.util.spec_from_file_location("base_ml", str(HERE / 'national' / '15_ml_pipeline_national.py'))
-    base_ml = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(base_ml)
-
-    csv_path = base_ml.PFAS_FEATURES_CSV if target == 'pfas' else base_ml.LI_FEATURES_CSV
-    label_col = 'pfas_detected' if target == 'pfas' else 'li_detected'
-    X_raw, X_imp, y_all, groups = base_ml.load_prepared_features(csv_path, label_col, logger)
+    X_raw, X_imp, y_all, groups = base_ml.load_prepared_features(
+        base_ml.PFAS_FEATURES_CSV, 'pfas_detected', logger)
     return base_ml, X_raw, X_imp, y_all, groups
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--arm', choices=['midwest8', 'national', 'northeast'], required=True)
-    parser.add_argument('--target', choices=['pfas', 'li'], required=True)
+    parser.add_argument('--arm', choices=['northeast'], default='northeast')
+    parser.add_argument('--target', choices=['pfas'], default='pfas')
     parser.add_argument('--model', choices=['rf', 'xgb'], required=True)
     parser.add_argument('--output-dir', type=str, default=None)
     args = parser.parse_args()
@@ -127,8 +80,7 @@ def main():
     (output_dir / 'models').mkdir(exist_ok=True)
     (output_dir / 'plots').mkdir(exist_ok=True)
 
-    loader = load_midwest8 if args.arm == 'midwest8' else load_national
-    base_ml, X_raw, X_imp, y_all, groups = loader(args.target, logger)
+    base_ml, X_raw, X_imp, y_all, groups = load_data(logger)
 
     labeled_mask = y_all.notna()
     y = y_all[labeled_mask].values.astype(int)
@@ -139,7 +91,7 @@ def main():
     feat_path = HERE / f'backward_elim_{tag}_final_features.csv'
     if not feat_path.exists():
         raise FileNotFoundError(
-            f"{feat_path} not found — run backward_elim_pfas_li.py --arm {args.arm} "
+            f"{feat_path} not found — run backward_elim_pfas.py --arm {args.arm} "
             f"--target {args.target} --model {args.model} first, then rerun this script.")
     final_features = pd.read_csv(feat_path)['feature'].tolist()
     logger.info(f"[{tag}] Using {len(final_features)} backward-elimination-selected features: {final_features}")

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-True one-at-a-time backward elimination for the PFAS and Lithium detection
-models, both arms (midwest8 8-state and national), mirroring
-chromium6/backward_elim_cr6_exceedance.py — same methodology, generalized
-to cover all 8 (arm x target x model) combinations via CLI args instead of
-one script per combination.
+True one-at-a-time backward elimination for the PFAS detection model,
+southeast regional arm, mirroring chromium6/backward_elim_cr6_exceedance.py
+— same methodology, generalized to cover multiple (arm x model)
+combinations via CLI args instead of one script per combination.
 
 Why backward elimination instead of RFE (the method currently used to
 select each model's final feature set in ml_pipeline.py / national's
@@ -52,15 +51,9 @@ Reuses each (arm, target, model)'s current saved best hyperparameters
 deltas are attributable to the removed feature, not re-tuning noise —
 same tradeoff accepted in the chromium6 version.
 
-Usage (run each of the 8 combinations as a separate job on HPC):
-  python3 backward_elim_pfas_li.py --arm midwest8 --target pfas --model rf
-  python3 backward_elim_pfas_li.py --arm midwest8 --target pfas --model xgb
-  python3 backward_elim_pfas_li.py --arm midwest8 --target li   --model rf
-  python3 backward_elim_pfas_li.py --arm midwest8 --target li   --model xgb
-  python3 backward_elim_pfas_li.py --arm national --target pfas --model rf
-  python3 backward_elim_pfas_li.py --arm national --target pfas --model xgb
-  python3 backward_elim_pfas_li.py --arm national --target li   --model rf
-  python3 backward_elim_pfas_li.py --arm national --target li   --model xgb
+Usage:
+  python3 backward_elim_pfas.py --arm southeast --model rf
+  python3 backward_elim_pfas.py --arm southeast --model xgb
 """
 import argparse
 import importlib.util
@@ -90,70 +83,30 @@ DEDUP_THRESHOLD = 0.60   # Spearman |r| pre-filter, matches RFE pipeline's own t
 # higher. Verified none of these were actually at risk in the current
 # candidate pool (none appeared in any dedup drop list across RF/XGB), but
 # protected anyway as cheap insurance against a future rerun where the
-# feature set or correlations shift.
-#   PFAS: log_dist_pfas_clustered_km (the PFAS-specific source-cluster
-#     distance feature — PFAS has no natural geochemistry analog, unlike
-#     Li/Cr6) plus log_dist_airport_km/military_km/fuds_km — airports,
-#     military bases, and FUDS are the documented AFFF firefighting-foam
-#     PFAS source category, distinct from generic industrial/landfill/wwtp
-#     proxies also in the pool.
-#   Li: source_geochem_Li_mean (the direct lithium measurement) plus
-#     log_count_battery_mfg_in_huc12/log_dist_coalplant_km — the lithium
-#     battery-industry and coal-ash source proxies.
+# feature set or correlations shift: log_dist_pfas_clustered_km (the
+# PFAS-specific source-cluster distance feature — PFAS has no natural
+# geochemistry analog to lean on instead) plus
+# log_dist_airport_km/military_km/fuds_km — airports, military bases, and
+# FUDS are the documented AFFF firefighting-foam PFAS source category,
+# distinct from generic industrial/landfill/wwtp proxies also in the pool.
 PRIORITY_KEEP = {
     'pfas': {'log_well_top_open_ft', 'log_dist_pfas_clustered_km',
              'log_dist_airport_km', 'log_dist_military_km', 'log_dist_fuds_km'},
-    'li':   {'log_well_top_open_ft', 'source_geochem_Li_mean',
-             'log_count_battery_mfg_in_huc12', 'log_dist_coalplant_km'},
 }
 
-RECALL_TARGET = {'pfas': 0.60, 'li': 0.80}
+RECALL_TARGET = {'pfas': 0.60}
 
-# Hyperparameters currently selected by RandomizedSearchCV for each
-# (arm, target, model), extracted from the saved models in
-# ml_output/{pfas,li}/models/ (midwest8) and ml_output_national/{pfas,li}/models/
-# (national) via joblib.load(...)['model'].get_params(). Fixed here so
-# elimination-path deltas reflect only the removed feature.
+# Hyperparameters selected by RandomizedSearchCV for the national PFAS
+# model, extracted via joblib.load(...)['model'].get_params(). Fixed here
+# so elimination-path deltas reflect only the removed feature.
 HYPERPARAMS = {
-    ('midwest8', 'li', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=152, random_state=42, n_jobs=-1),
-    ('midwest8', 'li', 'xgb'): dict(
-        colsample_bytree=0.9, gamma=0.1, learning_rate=0.05, max_depth=5,
-        min_child_weight=9, n_estimators=285, reg_alpha=0.1, reg_lambda=1.0,
-        scale_pos_weight=2.6482364156339373, subsample=0.7,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('midwest8', 'pfas', 'rf'): dict(
-        class_weight='balanced', max_depth=15, max_features=0.3,
-        min_samples_leaf=6, n_estimators=357, random_state=42, n_jobs=-1),
-    ('midwest8', 'pfas', 'xgb'): dict(
-        colsample_bytree=0.9, gamma=0.1, learning_rate=0.05, max_depth=5,
-        min_child_weight=9, n_estimators=285, reg_alpha=0.1, reg_lambda=1.0,
-        scale_pos_weight=3.661388550548112, subsample=0.7,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('national', 'li', 'rf'): dict(
+    # Starting hyperparameters, inherited from the national PFAS model's own
+    # randomized search -- no region-specific search has been run yet. Re-tune
+    # with a fresh randomized search if you want region-optimized values.
+    ('southeast', 'pfas', 'rf'): dict(
         class_weight='balanced', max_depth=None, max_features=0.3,
         min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
-    ('national', 'li', 'xgb'): dict(
-        colsample_bytree=0.6, gamma=0, learning_rate=0.05, max_depth=7,
-        min_child_weight=3, n_estimators=287, reg_alpha=0, reg_lambda=2.0,
-        scale_pos_weight=1.912605435801312, subsample=0.6,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    ('national', 'pfas', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
-    ('national', 'pfas', 'xgb'): dict(
-        colsample_bytree=0.6, gamma=0, learning_rate=0.05, max_depth=7,
-        min_child_weight=3, n_estimators=287, reg_alpha=0, reg_lambda=2.0,
-        scale_pos_weight=3.2566477955052324, subsample=0.6,
-        eval_metric='logloss', random_state=42, n_jobs=-1, tree_method='hist'),
-    # Northeast regional arm: reuses the national PFAS hyperparameters as a
-    # documented starting default (no region-specific search has been run yet) --
-    # re-tune via a fresh randomized search if you want region-optimized values.
-    ('northeast', 'pfas', 'rf'): dict(
-        class_weight='balanced', max_depth=None, max_features=0.3,
-        min_samples_leaf=2, n_estimators=188, random_state=42, n_jobs=-1),
-    ('northeast', 'pfas', 'xgb'): dict(
+    ('southeast', 'pfas', 'xgb'): dict(
         colsample_bytree=0.6, gamma=0, learning_rate=0.05, max_depth=7,
         min_child_weight=3, n_estimators=287, reg_alpha=0, reg_lambda=2.0,
         scale_pos_weight=3.2566477955052324, subsample=0.6,
@@ -232,37 +185,21 @@ def backward_eliminate(tag, group_cv_fn, estimator_fn, X_df, y, groups, feat_lis
     return current, pd.DataFrame(path)
 
 
-def load_midwest8(target, logger):
-    spec = importlib.util.spec_from_file_location("base_ml", str(HERE / 'ml_pipeline.py'))
+def load_data(logger):
+    spec = importlib.util.spec_from_file_location(
+        "base_ml", str(HERE.parent / 'feature_pipeline' / '15_ml_pipeline_national.py'))
     base_ml = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(base_ml)
 
-    X_raw, X_imp, y_pfas, y_li, groups, col_medians = base_ml.build_features(base_ml.DATA_PATH, logger)
-    y_all = y_pfas if target == 'pfas' else y_li
-    extra_drop = base_ml.PFAS_EXTRA_DROP if target == 'pfas' else base_ml.LI_EXTRA_DROP
-    drop = [c for c in extra_drop if c in X_raw.columns]
-    if drop:
-        logger.info(f"  Dropping {len(drop)} target-specific columns: {drop[:5]}{'...' if len(drop) > 5 else ''}")
-        X_raw = X_raw.drop(columns=drop)
-        X_imp = X_imp.drop(columns=drop)
-    return base_ml, X_raw, X_imp, y_all, groups
-
-
-def load_national(target, logger):
-    spec = importlib.util.spec_from_file_location("base_ml", str(HERE / 'national' / '15_ml_pipeline_national.py'))
-    base_ml = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(base_ml)
-
-    csv_path = base_ml.PFAS_FEATURES_CSV if target == 'pfas' else base_ml.LI_FEATURES_CSV
-    label_col = 'pfas_detected' if target == 'pfas' else 'li_detected'
-    X_raw, X_imp, y_all, groups = base_ml.load_prepared_features(csv_path, label_col, logger)
+    X_raw, X_imp, y_all, groups = base_ml.load_prepared_features(
+        base_ml.PFAS_FEATURES_CSV, 'pfas_detected', logger)
     return base_ml, X_raw, X_imp, y_all, groups
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--arm', choices=['midwest8', 'national', 'northeast'], required=True)
-    parser.add_argument('--target', choices=['pfas', 'li'], required=True)
+    parser.add_argument('--arm', choices=['southeast'], default='southeast')
+    parser.add_argument('--target', choices=['pfas'], default='pfas')
     parser.add_argument('--model', choices=['rf', 'xgb'], required=True)
     args = parser.parse_args()
 
@@ -270,8 +207,7 @@ def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s [INFO] %(message)s', datefmt='%H:%M:%S')
     logger = logging.getLogger(tag)
 
-    loader = load_midwest8 if args.arm == 'midwest8' else load_national
-    base_ml, X_raw, X_imp, y_all, groups = loader(args.target, logger)
+    base_ml, X_raw, X_imp, y_all, groups = load_data(logger)
 
     labeled_mask = y_all.notna()
     y = y_all[labeled_mask].values.astype(int)
