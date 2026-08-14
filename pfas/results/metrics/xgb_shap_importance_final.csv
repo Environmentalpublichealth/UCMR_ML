@@ -1,0 +1,47 @@
+feature,mean_abs_shap
+log_well_top_open_ft,0.5380539
+precip_mm_ann,0.23051362
+log_dist_pfas_clustered_km,0.22717695
+log_well_screen_len_ft,0.14222154
+log_dist_fuds_km,0.12701365
+log_dist_military_km,0.12502941
+source_urban_clr,0.10521532
+log_dist_landfill_km,0.10445423
+source_forest_clr,0.1016862
+FWT_GW,0.095757656
+log_dist_airport_km,0.089752115
+log_count_industry_in_huc12,0.08934117
+log_dist_wwtp_km,0.0890573
+source_water_clr,0.08530581
+Primary Source_Surface water purchased,0.07572381
+Is Source Water Protected,0.07355769
+source_agriculture_clr,0.065702096
+ROCK_100,0.063845985
+source_shrub_clr,0.061997738
+source_grassland_clr,0.058182266
+treat_con,0.03401944
+treat_gwd,0.028854225
+ROCK_200,0.028784502
+treat_mfl,0.028685264
+ROCK_300,0.026497038
+ROCK_600,0.024679605
+sdwa_treated,0.024344295
+log_count_fuds_in_huc12,0.023874052
+seller_chain_depth,0.021737307
+disinfect_none,0.020508416
+treat_pac,0.0197255
+geochem_U_count,0.018823188
+ROCK_999,0.017287027
+treat_gac,0.016172074
+ROCK_400,0.015999986
+log_count_military_in_huc12,0.015404579
+log_count_landfills_in_huc12,0.009015708
+log_count_airports_in_huc12,0.00832661
+ROCK_500,0.006496579
+disinfect_uv,0.005593158
+disinfect_ozone,0.0048322785
+Primary Source_Groundwater under influence of surface water,0.0042081773
+FWT_MX,0.0026030762
+PWS Type_Non-Transient non-community system,0.0012611394
+Primary Source_Ground water purchased,0.0010556307
+PWS Type_Transient non-community system,0.0

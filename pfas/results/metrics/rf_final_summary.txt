@@ -1,0 +1,26 @@
+arm=national
+target=pfas
+model=rf
+n_features=27
+features=['FWT_GW', 'FWT_MX', 'Is Source Water Protected', 'PWS Type_Transient non-community system', 'Primary Source_Ground water purchased', 'Primary Source_Surface water', 'ROCK_200', 'ROCK_300', 'ROCK_600', 'disinfect_none', 'disinfect_uv', 'geochem_U_count', 'log_count_airports_in_huc12', 'log_count_fuds_in_huc12', 'log_dist_airport_km', 'log_dist_fuds_km', 'log_dist_landfill_km', 'log_dist_military_km', 'log_dist_pfas_clustered_km', 'log_well_screen_len_ft', 'log_well_top_open_ft', 'precip_mm_ann', 'seller_chain_depth', 'source_agriculture_clr', 'source_wetland_clr', 'treat_con', 'treat_mfl']
+
+5-fold CV (facility level):
+  roc_auc_mean=0.8028
+  roc_auc_std=0.0074
+  pr_auc_mean=0.6011
+  pr_auc_std=0.0133
+  precision_mean=0.5447
+  precision_std=0.0151
+  recall_mean=0.6061
+  recall_std=0.0046
+  f1_opt_mean=0.5737
+  f1_opt_std=0.01
+
+PWS-level:
+  pws_roc_auc=0.807768926094169
+  pws_pr_auc=0.7087273811652164
+  pws_precision=0.6707861311362856
+  pws_recall=0.6001228501228502
+  pws_f1=0.6334900307991571
+  pws_n=9745
+  pws_n_pos=3256

@@ -1,0 +1,26 @@
+arm=national
+target=pfas
+model=xgb
+n_features=46
+features=['FWT_GW', 'FWT_MX', 'Is Source Water Protected', 'PWS Type_Non-Transient non-community system', 'PWS Type_Transient non-community system', 'Primary Source_Ground water purchased', 'Primary Source_Groundwater under influence of surface water', 'Primary Source_Surface water purchased', 'ROCK_100', 'ROCK_200', 'ROCK_300', 'ROCK_400', 'ROCK_500', 'ROCK_600', 'ROCK_999', 'disinfect_none', 'disinfect_ozone', 'disinfect_uv', 'geochem_U_count', 'log_count_airports_in_huc12', 'log_count_fuds_in_huc12', 'log_count_industry_in_huc12', 'log_count_landfills_in_huc12', 'log_count_military_in_huc12', 'log_dist_airport_km', 'log_dist_fuds_km', 'log_dist_landfill_km', 'log_dist_military_km', 'log_dist_pfas_clustered_km', 'log_dist_wwtp_km', 'log_well_screen_len_ft', 'log_well_top_open_ft', 'precip_mm_ann', 'sdwa_treated', 'seller_chain_depth', 'source_agriculture_clr', 'source_forest_clr', 'source_grassland_clr', 'source_shrub_clr', 'source_urban_clr', 'source_water_clr', 'treat_con', 'treat_gac', 'treat_gwd', 'treat_mfl', 'treat_pac']
+
+5-fold CV (facility level):
+  roc_auc_mean=0.807
+  roc_auc_std=0.0114
+  pr_auc_mean=0.6105
+  pr_auc_std=0.0138
+  precision_mean=0.5576
+  precision_std=0.0325
+  recall_mean=0.6026
+  recall_std=0.0022
+  f1_opt_mean=0.5789
+  f1_opt_std=0.018
+
+PWS-level:
+  pws_roc_auc=0.803617386141658
+  pws_pr_auc=0.707090904121348
+  pws_precision=0.6624872924432396
+  pws_recall=0.6004299754299754
+  pws_f1=0.629933945545352
+  pws_n=9745
+  pws_n_pos=3256

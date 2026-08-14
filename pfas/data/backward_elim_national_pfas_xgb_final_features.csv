@@ -1,0 +1,47 @@
+feature
+FWT_GW
+FWT_MX
+Is Source Water Protected
+PWS Type_Non-Transient non-community system
+PWS Type_Transient non-community system
+Primary Source_Ground water purchased
+Primary Source_Groundwater under influence of surface water
+Primary Source_Surface water purchased
+ROCK_100
+ROCK_200
+ROCK_300
+ROCK_400
+ROCK_500
+ROCK_600
+ROCK_999
+disinfect_none
+disinfect_ozone
+disinfect_uv
+geochem_U_count
+log_count_airports_in_huc12
+log_count_fuds_in_huc12
+log_count_industry_in_huc12
+log_count_landfills_in_huc12
+log_count_military_in_huc12
+log_dist_airport_km
+log_dist_fuds_km
+log_dist_landfill_km
+log_dist_military_km
+log_dist_pfas_clustered_km
+log_dist_wwtp_km
+log_well_screen_len_ft
+log_well_top_open_ft
+precip_mm_ann
+sdwa_treated
+seller_chain_depth
+source_agriculture_clr
+source_forest_clr
+source_grassland_clr
+source_shrub_clr
+source_urban_clr
+source_water_clr
+treat_con
+treat_gac
+treat_gwd
+treat_mfl
+treat_pac

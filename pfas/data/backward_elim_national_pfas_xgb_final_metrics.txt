@@ -1,0 +1,5 @@
+n_features=52
+pr_auc_5fold=0.6206
+f1_5fold=0.5807
+precision_5fold=0.5581
+recall_5fold=0.6056

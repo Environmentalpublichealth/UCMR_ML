@@ -1,0 +1,2 @@
+model,level,n,n_pos,roc_auc,pr_auc,precision,recall,f1,threshold
+rf,PWS,9745,3256,0.8078,0.7087,0.6708,0.6001,0.6335,0.4351
