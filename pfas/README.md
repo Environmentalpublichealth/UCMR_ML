@@ -214,5 +214,5 @@ python3 score_validation.py --features /path/to/validation_features.csv \
 
 ## 8. Model I/O
 
-- `models/rf_model_final.joblib`, `models/xgb_model_final.joblib`: `{'model': <sklearn/xgboost estimator>, 'features': [...]}`
+- `models/rf_model_final.joblib`, `models/xgb_model_final.joblib`: `{'model': <sklearn/xgboost estimator>, 'features': [...]}`. Saved with `joblib.dump(..., compress=3)` — the RF model in particular has unconstrained tree depth (`max_depth=None`, `min_samples_leaf=2`, from hyperparameter search; ~845K total nodes across 188 trees), so without compression it serializes to ~65MB versus ~20MB compressed. Compression is lossless (identical predictions before/after — verified directly).
 - `models/lr_model_final.joblib`: `{'model': <LogisticRegression>, 'scaler': <StandardScaler>, 'scaler_features': [...62 VIF-pruned cols, the order the scaler expects...], 'features': [...48 final p-value-pruned cols, the order the model expects...]}` — LR requires the two-stage column handling because p-value pruning happens *after* scaling; see `score_validation.py` for the correct application order.

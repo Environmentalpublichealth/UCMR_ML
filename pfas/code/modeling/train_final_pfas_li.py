@@ -160,7 +160,7 @@ def main():
 
     est.fit(X_arr, y)
     joblib.dump({'model': est, 'features': final_features},
-                output_dir / 'models' / f'{args.model}_model_final.joblib')
+                output_dir / 'models' / f'{args.model}_model_final.joblib', compress=3)
 
     # ── Feature importance: permutation importance (RF and XGB) + SHAP (XGB only) ──
     logger.info(f"[{tag}] Computing permutation importance (n_repeats=20)...")

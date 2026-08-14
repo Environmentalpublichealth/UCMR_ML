@@ -78,7 +78,7 @@ def main():
     # subselect final_cols from the scaled output (not scale final_cols alone).
     bundle = {'model': lr, 'scaler': scaler, 'scaler_features': vif_cols, 'features': final_cols}
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump(bundle, OUT_PATH)
+    joblib.dump(bundle, OUT_PATH, compress=3)
     logger.info(f"Saved LR model bundle ({len(final_cols)} features) to {OUT_PATH}")
 
 
