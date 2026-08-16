@@ -1,0 +1,63 @@
+{
+  "data_path": "/workspaces/UCMR_ML/pfas_northeast/code/alexs_experiments/NE_data_ready.csv",
+  "n_rows": 3739,
+  "n_pws": 1439,
+  "n_features": 69,
+  "positive_rows": 1413,
+  "positive_rate": 0.377908531692966,
+  "folds": 5,
+  "class_weight": "balanced",
+  "regularization_c": 1.0,
+  "decision_threshold": 0.5,
+  "fold_metrics": {
+    "roc_auc_mean": 0.6926374513594415,
+    "roc_auc_std": 0.11474464366452809,
+    "pr_auc_mean": 0.5868246388864562,
+    "pr_auc_std": 0.13533779597860224,
+    "accuracy_mean": 0.6541431925063232,
+    "accuracy_std": 0.07221803337139017,
+    "precision_mean": 0.5392062809776371,
+    "precision_std": 0.06392489121250126,
+    "recall_mean": 0.7119790491942962,
+    "recall_std": 0.04670739932844329,
+    "f1_mean": 0.6112047468291681,
+    "f1_std": 0.047201725651794146
+  },
+  "facility_oof_metrics": {
+    "n": 3739,
+    "n_positive": 1413,
+    "positive_rate": 0.377908531692966,
+    "roc_auc": 0.6896013494641027,
+    "pr_auc": 0.4958565200412607,
+    "accuracy": 0.6541856111259695,
+    "precision": 0.5317124735729387,
+    "recall": 0.7119603680113235,
+    "f1": 0.6087745839636913,
+    "threshold": 0.5,
+    "true_negative": 1440,
+    "false_positive": 886,
+    "false_negative": 407,
+    "true_positive": 1006
+  },
+  "pws_oof_metrics": {
+    "n": 1439,
+    "n_positive": 636,
+    "positive_rate": 0.4419735927727589,
+    "roc_auc": 0.7601369079787276,
+    "pr_auc": 0.7288624966008891,
+    "accuracy": 0.7109103544127866,
+    "precision": 0.6883561643835616,
+    "recall": 0.6320754716981132,
+    "f1": 0.659016393442623,
+    "threshold": 0.5,
+    "true_negative": 621,
+    "false_positive": 182,
+    "false_negative": 234,
+    "true_positive": 402
+  },
+  "versions": {
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "scikit_learn": "1.9.0"
+  }
+}
