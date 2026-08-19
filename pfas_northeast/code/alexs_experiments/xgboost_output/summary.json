@@ -1,0 +1,83 @@
+{
+  "data_path": "/workspaces/UCMR_ML/pfas_northeast/code/alexs_experiments/NE_data_ready.csv",
+  "model_type": "xgboost_classifier",
+  "n_rows": 3739,
+  "n_pws": 1439,
+  "n_features": 69,
+  "positive_rows": 1413,
+  "positive_rate": 0.377908531692966,
+  "folds": 5,
+  "decision_threshold": 0.5,
+  "grouped_by": "PWSID",
+  "hyperparameters": {
+    "n_estimators": 300,
+    "learning_rate": 0.03,
+    "max_depth": 3,
+    "min_child_weight": 3.0,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "reg_alpha": 0.05,
+    "reg_lambda": 1.0,
+    "gamma": 0.0,
+    "tree_method": "hist",
+    "importance_type": "gain",
+    "class_balance": "balanced sample weights"
+  },
+  "fold_metrics": {
+    "roc_auc_mean": 0.7652125833778652,
+    "roc_auc_std": 0.029820454605865996,
+    "pr_auc_mean": 0.659663786125227,
+    "pr_auc_std": 0.03051017174666964,
+    "accuracy_mean": 0.7023159467960436,
+    "accuracy_std": 0.02160714660590893,
+    "precision_mean": 0.5969874997969304,
+    "precision_std": 0.035843780454583515,
+    "recall_mean": 0.6716487482144199,
+    "recall_std": 0.09237080318122222,
+    "f1_mean": 0.6283261861961,
+    "f1_std": 0.03854479459331116
+  },
+  "facility_oof_metrics": {
+    "n": 3739,
+    "n_positive": 1413,
+    "positive_rate": 0.377908531692966,
+    "roc_auc": 0.7614658200872746,
+    "pr_auc": 0.6550935837692358,
+    "accuracy": 0.7023268253543729,
+    "precision": 0.5938673341677096,
+    "recall": 0.6716206652512385,
+    "f1": 0.630355363666556,
+    "threshold": 0.5,
+    "true_negative": 1677,
+    "false_positive": 649,
+    "false_negative": 464,
+    "true_positive": 949
+  },
+  "pws_oof_metrics": {
+    "n": 1439,
+    "n_positive": 636,
+    "positive_rate": 0.4419735927727589,
+    "roc_auc": 0.7863612866843677,
+    "pr_auc": 0.767726191718878,
+    "accuracy": 0.7303683113273106,
+    "precision": 0.7271062271062271,
+    "recall": 0.6242138364779874,
+    "f1": 0.6717428087986463,
+    "threshold": 0.5,
+    "true_negative": 654,
+    "false_positive": 149,
+    "false_negative": 239,
+    "true_positive": 397
+  },
+  "dropped_predictors": [
+    "PWS Type_Transient non-community system",
+    "ROCK_100"
+  ],
+  "versions": {
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "scikit_learn": "1.9.0",
+    "xgboost": "3.4.1",
+    "joblib": "1.5.3"
+  }
+}

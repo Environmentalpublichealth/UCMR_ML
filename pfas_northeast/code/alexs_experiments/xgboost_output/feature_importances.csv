@@ -1,0 +1,70 @@
+rank,feature,importance
+1,ROCK_300,0.05584685
+2,precip_mm_ann,0.05319146
+3,is_purchased,0.053030856
+4,ROCK_600,0.040975112
+5,ROCK_999,0.034895137
+6,log_count_wwtp_in_huc12,0.032855142
+7,log_dist_pfas_clustered_km,0.032405406
+8,source_barren_clr,0.0316216
+9,Service Area_Residential Area,0.031318963
+10,log_well_screen_len_ft,0.026282545
+11,log_well_top_open_ft,0.021934006
+12,log_dist_fuds_km,0.021102998
+13,source_water_clr,0.02102139
+14,disinfect_uv,0.020478673
+15,source_urban_clr,0.019509012
+16,Primary Source_Surface water purchased,0.019170756
+17,log_dist_military_km,0.017258184
+18,log_count_discharge_in_huc12,0.017101277
+19,Service Area_Municipality,0.016470816
+20,source_other_clr,0.016162712
+21,log_dist_industry_km,0.016143365
+22,# of Facilities,0.01550105
+23,geochem_U_count,0.014940572
+24,source_forest_clr,0.014746533
+25,log_dist_airport_km,0.014740066
+26,source_grassland_clr,0.014520285
+27,source_wetland_clr,0.014428568
+28,log_count_industry_in_huc12,0.014415491
+29,Service Area_Institution,0.014210388
+30,treat_gwd,0.013668619
+31,Is Source Water Protected,0.01347064
+32,log_dist_wwtp_km,0.0130169345
+33,treat_iex,0.012428363
+34,sdwa_treated,0.0123441275
+35,disinfect_none,0.01218966
+36,log_count_manufacturer_in_huc12,0.011854245
+37,sdwa_filtered,0.011476154
+38,ROCK_200,0.011443276
+39,log_Service Connections Count,0.01125791
+40,FWT_GW,0.011199837
+41,Is Wholesaler,0.011146905
+42,source_agriculture_clr,0.011121034
+43,log_Population Served Count,0.010880958
+44,log_dist_landfill_km,0.0108779445
+45,treat_gac,0.010798173
+46,FWT_SW,0.010373917
+47,source_shrub_clr,0.010343208
+48,treat_pac,0.009734094
+49,log_count_fuds_in_huc12,0.009643918
+50,Primary Source_Ground water,0.009062862
+51,Primary Source_Surface water,0.008741033
+52,Service Area_School,0.008664199
+53,disinfect_ozone,0.008332393
+54,log_count_military_in_huc12,0.008157515
+55,treat_mfl,0.0059769605
+56,treat_con,0.005515949
+57,PWS Type_Community water system,0.0
+58,PWS Type_Non-Transient non-community system,0.0
+59,Primary Source_Groundwater under influence of surface water,0.0
+60,seller_chain_depth,0.0
+61,Service Area_Industrial/Agricultural,0.0
+62,Primary Source_Ground water purchased,0.0
+63,FWT_GU,0.0
+64,log_count_landfills_in_huc12,0.0
+65,log_count_airports_in_huc12,0.0
+66,FWT_MX,0.0
+67,ROCK_missing,0.0
+68,ROCK_500,0.0
+69,ROCK_400,0.0
