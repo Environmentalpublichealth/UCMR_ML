@@ -1,0 +1,69 @@
+{
+  "data_path": "/workspaces/UCMR_ML/pfas_northeast/code/alexs_experiments/NE_data_ready.csv",
+  "model_type": "random_forest",
+  "n_rows": 3739,
+  "n_pws": 1439,
+  "n_features": 69,
+  "positive_rows": 1413,
+  "positive_rate": 0.377908531692966,
+  "folds": 5,
+  "decision_threshold": 0.5,
+  "hyperparameters": {
+    "n_estimators": 188,
+    "max_depth": null,
+    "max_features": 0.3,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced"
+  },
+  "fold_metrics": {
+    "roc_auc_mean": 0.7720810264092421,
+    "roc_auc_std": 0.030729386509032192,
+    "pr_auc_mean": 0.66525182597779,
+    "pr_auc_std": 0.03917796236181674,
+    "accuracy_mean": 0.7215630267003255,
+    "accuracy_std": 0.0193504090451011,
+    "precision_mean": 0.6379074493324259,
+    "precision_std": 0.02657645627173024,
+    "recall_mean": 0.6135403353131343,
+    "recall_std": 0.08889301848910976,
+    "f1_mean": 0.6224453406586223,
+    "f1_std": 0.04477728813643922
+  },
+  "facility_oof_metrics": {
+    "n": 3739,
+    "n_positive": 1413,
+    "positive_rate": 0.377908531692966,
+    "roc_auc": 0.7695284664754682,
+    "pr_auc": 0.6641075604309961,
+    "accuracy": 0.7215833110457341,
+    "precision": 0.6365638766519823,
+    "recall": 0.613588110403397,
+    "f1": 0.6248648648648648,
+    "threshold": 0.5,
+    "true_negative": 1831,
+    "false_positive": 495,
+    "false_negative": 546,
+    "true_positive": 867
+  },
+  "pws_oof_metrics": {
+    "n": 1439,
+    "n_positive": 636,
+    "positive_rate": 0.4419735927727589,
+    "roc_auc": 0.7989164062438812,
+    "pr_auc": 0.7750704050930648,
+    "accuracy": 0.7359277275886031,
+    "precision": 0.7711864406779662,
+    "recall": 0.5723270440251572,
+    "f1": 0.6570397111913358,
+    "threshold": 0.5,
+    "true_negative": 695,
+    "false_positive": 108,
+    "false_negative": 272,
+    "true_positive": 364
+  },
+  "versions": {
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "scikit_learn": "1.9.0"
+  }
+}
