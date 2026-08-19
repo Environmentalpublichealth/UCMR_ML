@@ -1,0 +1,80 @@
+{
+  "model_type": "GradientBoostingClassifier",
+  "data_path": "/workspaces/UCMR_ML/pfas_northeast/code/alexs_experiments/NE_data_ready.csv",
+  "n_rows": 3739,
+  "n_pws": 1439,
+  "n_features": 69,
+  "positive_rows": 1413,
+  "negative_rows": 2326,
+  "positive_rate": 0.377908531692966,
+  "n_folds": 5,
+  "decision_threshold": 0.5,
+  "grouped_by": "PWSID",
+  "class_balancing": "balanced sample weights within each training fold",
+  "hyperparameters": {
+    "n_estimators": 200,
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "min_samples_leaf": 2,
+    "subsample": 0.8,
+    "random_state": 42
+  },
+  "fold_metrics": {
+    "roc_auc_mean": 0.7623695030917297,
+    "roc_auc_std": 0.027399118298437563,
+    "pr_auc_mean": 0.6621685926017564,
+    "pr_auc_std": 0.0225189715492974,
+    "accuracy_mean": 0.6975159802024381,
+    "accuracy_std": 0.015405005798639387,
+    "precision_mean": 0.5912121302778455,
+    "precision_std": 0.032850658184545994,
+    "recall_mean": 0.6688043505500839,
+    "recall_std": 0.07565395777355202,
+    "f1_mean": 0.6243659899066456,
+    "f1_std": 0.024070053876279644
+  },
+  "facility_oof_metrics": {
+    "n": 3739,
+    "n_positive": 1413,
+    "positive_rate": 0.377908531692966,
+    "roc_auc": 0.7574062005003289,
+    "pr_auc": 0.6547497953504686,
+    "accuracy": 0.6975127039315325,
+    "precision": 0.5876865671641791,
+    "recall": 0.6687898089171974,
+    "f1": 0.6256206554121152,
+    "threshold": 0.5,
+    "true_negative": 1663,
+    "false_positive": 663,
+    "false_negative": 468,
+    "true_positive": 945
+  },
+  "pws_oof_metrics": {
+    "n": 1439,
+    "n_positive": 636,
+    "positive_rate": 0.4419735927727589,
+    "roc_auc": 0.7827310322141028,
+    "pr_auc": 0.7668376497035725,
+    "accuracy": 0.7261987491313412,
+    "precision": 0.7216117216117216,
+    "recall": 0.6194968553459119,
+    "f1": 0.6666666666666666,
+    "threshold": 0.5,
+    "true_negative": 651,
+    "false_positive": 152,
+    "false_negative": 242,
+    "true_positive": 394
+  },
+  "dropped_predictors": [
+    "PWS Type_Transient non-community system",
+    "ROCK_100"
+  ],
+  "versions": {
+    "python_packages": {
+      "numpy": "2.5.2",
+      "pandas": "3.0.5",
+      "scikit_learn": "1.9.0",
+      "joblib": "1.5.3"
+    }
+  }
+}

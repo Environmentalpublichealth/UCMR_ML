@@ -1,0 +1,70 @@
+rank,feature,importance
+1,precip_mm_ann,0.16990282795967118
+2,log_dist_pfas_clustered_km,0.07867030107640113
+3,log_well_top_open_ft,0.0748297405123275
+4,source_water_clr,0.050895286693704016
+5,log_dist_industry_km,0.04514672077695154
+6,log_well_screen_len_ft,0.0421007478524385
+7,log_dist_fuds_km,0.04117874247508167
+8,log_dist_military_km,0.040039570123095086
+9,ROCK_600,0.03583116299557517
+10,log_count_wwtp_in_huc12,0.03287718551311592
+11,log_dist_airport_km,0.02839720204138933
+12,log_dist_landfill_km,0.02632146222718126
+13,# of Facilities,0.025872316010229386
+14,source_urban_clr,0.024833754830848834
+15,source_barren_clr,0.024250087469718046
+16,source_forest_clr,0.022228307018085265
+17,log_dist_wwtp_km,0.021156860524834356
+18,ROCK_300,0.018863431466032417
+19,Service Area_Residential Area,0.018862548237110123
+20,source_wetland_clr,0.01885779084165959
+21,source_other_clr,0.017789607958173838
+22,log_Service Connections Count,0.013839144722617032
+23,source_grassland_clr,0.013706273146523278
+24,is_purchased,0.012854615015553636
+25,log_count_discharge_in_huc12,0.011176022497834566
+26,log_Population Served Count,0.009114299043213661
+27,source_shrub_clr,0.008071442192891446
+28,log_count_industry_in_huc12,0.007664465235310031
+29,disinfect_uv,0.007647367068876751
+30,treat_iex,0.007202260355551227
+31,source_agriculture_clr,0.004383935376278161
+32,FWT_GW,0.004210680158615032
+33,Primary Source_Surface water purchased,0.004126718388056098
+34,ROCK_999,0.003394157212809131
+35,treat_con,0.003076770697518495
+36,Service Area_Institution,0.003037093396007424
+37,sdwa_treated,0.002442106761493636
+38,disinfect_none,0.002297660040704122
+39,geochem_U_count,0.0022740000926994943
+40,Is Source Water Protected,0.002043772144271407
+41,ROCK_200,0.0020294760255202596
+42,treat_pac,0.0020226287429565316
+43,Primary Source_Ground water purchased,0.0017733749291933374
+44,FWT_SW,0.001666122662393231
+45,Primary Source_Surface water,0.0016221622251896863
+46,log_count_fuds_in_huc12,0.0016079523787589747
+47,log_count_manufacturer_in_huc12,0.0012247340947759274
+48,log_count_landfills_in_huc12,0.001062151599388374
+49,treat_gac,0.0006960202936303299
+50,ROCK_missing,0.0006535546129558336
+51,ROCK_400,0.0006154277594419628
+52,treat_gwd,0.000599337166226886
+53,treat_mfl,0.0005783156783196278
+54,Service Area_Municipality,0.0005755118286764195
+55,Service Area_Industrial/Agricultural,0.00042972895932102116
+56,Primary Source_Ground water,0.00042005806830488666
+57,sdwa_filtered,0.00031203777941871835
+58,FWT_MX,0.0002912112393229069
+59,log_count_airports_in_huc12,0.00021808380260678915
+60,seller_chain_depth,0.00013367200314953686
+61,Is Wholesaler,0.0
+62,PWS Type_Non-Transient non-community system,0.0
+63,PWS Type_Community water system,0.0
+64,Primary Source_Groundwater under influence of surface water,0.0
+65,Service Area_School,0.0
+66,disinfect_ozone,0.0
+67,log_count_military_in_huc12,0.0
+68,FWT_GU,0.0
+69,ROCK_500,0.0
